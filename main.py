@@ -22,11 +22,11 @@ visOne = attrition.dropna(subset=['MonthlyIncome'])
 # plt.show()
 
 # Draw a nested barplot by species and sex
-g = sns.catplot(data=visOne, kind="bar", x="Department", y="MonthlyIncome", hue="Attrition", ci="sd", palette="dark", alpha=.6, height=6)
-g.despine(left=True)
-g.set_axis_labels("", "Monthly Income")
-g.legend.set_title("")
-# plt.show()
+vOne = sns.catplot(data=visOne, kind="bar", x="Department", y="MonthlyIncome", hue="Attrition", ci="sd", palette="dark", alpha=.6, height=6)
+vOne.despine(left=True)
+vOne.set_axis_labels("", "Monthly Income")
+plt.savefig('visualization_one.png')
+plt.show()
 
 # Visualization 2
 # Average Satisfaction - Environment, Job, Relationship
