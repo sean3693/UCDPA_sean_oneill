@@ -27,7 +27,7 @@ subplot_graph("Education", "MonthlyIncome", ax1[0, 0])
 subplot_graph("Department", "MonthlyIncome", ax1[0, 1])
 subplot_graph("MaritalStatus", "JobLevel", ax1[1, 0])
 subplot_graph("OverTime", "PercentSalaryHike", ax1[1, 1])
-plt.savefig('visualization_one.png')
+plt.savefig('visualization_1.png')
 
 
 # ----------------- Visualization 2 ------------------------
@@ -66,7 +66,7 @@ subplot_graph_2d("AverageSatisfaction", ax2[3])
 plt.sca(ax2[3])
 plt.xticks(range(10), ['1', '1.34', '1.67', '2', '2.34', '2.67', '3', '3.34', '3.67', '4'])
 plt.tight_layout()
-plt.savefig('visualization_two.png')
+plt.savefig('visualization_2.png')
 plt.close(4)
 
 plt.show()
