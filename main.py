@@ -27,7 +27,6 @@ subplot_graph("Education", "MonthlyIncome", ax1[0, 0])
 subplot_graph("Department", "MonthlyIncome", ax1[0, 1])
 subplot_graph("MaritalStatus", "JobLevel", ax1[1, 0])
 subplot_graph("OverTime", "PercentSalaryHike", ax1[1, 1])
-plt.title("title")
 plt.savefig('visualization_one.png')
 
 
