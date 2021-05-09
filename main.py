@@ -11,47 +11,63 @@ attrition.to_sql('data_table', engine)
 # drop any duplicates in the data before any manipulation
 attrition.drop_duplicates()
 
-# first visualization. Attrition X job satisfaction, grouped by daily rate
+# ----------------- Visualization 1 ------------------------
+# Create visualization one dataframe
 # Remove any with empty daily rate
-visOne = attrition.dropna(subset=['MonthlyIncome'])
+vis_one_df = attrition.dropna(subset=['MonthlyIncome'])
 
-# sns.set_style("whitegrid")
-# g = sns.lmplot(x="Age", y="DailyRate", data=visOne, aspect=2)
-# g = (g.set_axis_labels("Age","Daily Rate").set(xlim=(18, 60), ylim=(0, 1500)))
-# plt.title("Daily Rate by Age")
-# plt.show()
 
-# Draw a nested barplot by species and sex
-vOne = sns.catplot(data=visOne, kind="bar", x="Department", y="MonthlyIncome", hue="Attrition", ci="sd", palette="dark", alpha=.6, height=6)
-vOne.despine(left=True)
-vOne.set_axis_labels("", "Monthly Income")
+def subplot_graph(x_axis, y_axis, subplot_location):
+    sns.barplot(data=vis_one_df, x=x_axis, y=y_axis, hue="Attrition",
+                ci="sd", palette="dark", alpha=.6, ax=subplot_location)
+
+
+fig1, ax1 = plt.subplots(2, 2, figsize=(12, 8))
+subplot_graph("Education", "MonthlyIncome", ax1[0, 0])
+subplot_graph("Department", "MonthlyIncome", ax1[0, 1])
+subplot_graph("MaritalStatus", "JobLevel", ax1[1, 0])
+subplot_graph("OverTime", "PercentSalaryHike", ax1[1, 1])
+plt.title("title")
 plt.savefig('visualization_one.png')
-plt.show()
 
-# Visualization 2
+
+# ----------------- Visualization 2 ------------------------
 # Average Satisfaction - Environment, Job, Relationship
 
-satisfaction = ["Low", "Medium" "High", "Very High"]
+# numpy array with all satisfaction columns from the dataset - WORKING
+satisfaction_df = attrition[['EnvironmentSatisfaction', 'JobSatisfaction', 'RelationshipSatisfaction']]
+satisfaction_array = satisfaction_df.to_numpy()
 
-# numpy array with all satisfaction columns from the dataset
-visTwo = attrition[['EnvironmentSatisfaction', 'JobSatisfaction', 'RelationshipSatisfaction']].to_numpy()
+# initialize list
+average_satisfaction = []
+# find average and fill array
+for i, row in enumerate(satisfaction_array):
+    average_satisfaction.append(np.sum(row) / 3)
 
-# Sorting OR indexing OR grouping
-# Looping OR itterows
-# Merging dataframes
-# Use functions
-# 2 Visualizations
+# Merge satisfaction_df dataframe with average_satisfaction list
 
-# FIX ME - I should add each row in the 2d array
-def add_2_dimensional(data, index):
-    sum = 0
-    for val in data[index]:
-        sum = sum + val
-    return sum
+series_sat = pd.Series(average_satisfaction, name="AverageSatisfaction")
+attrition_and_satisfaction = attrition[['Attrition', 'YearsAtCompany', 'EnvironmentSatisfaction',
+                                        'JobSatisfaction', 'RelationshipSatisfaction']]
+vis_two_df = pd.concat([attrition_and_satisfaction, series_sat], axis=1)
 
-# FINISH ME - I should call the function to add the rows and then add them to a new array - this maybe should be a dataframe so we get the merging too
-sats = [len(visTwo)]
-for i in range(len(visTwo)):
-    sats.append(add_2_dimensional(visTwo, i))
 
-print(sats)
+def subplot_graph_2d(x_axis, subplot_location):
+    sns.countplot(data=vis_two_df, x=x_axis, hue="Attrition",
+                palette="colorblind", ax=subplot_location)
+
+
+fig2, ax2 = plt.subplots(4, 1, figsize=(12, 8))
+subplot_graph_2d("EnvironmentSatisfaction", ax2[0])
+plt.xlabel("JobSatisfaction")
+subplot_graph_2d("JobSatisfaction", ax2[1])
+subplot_graph_2d("RelationshipSatisfaction", ax2[2])
+subplot_graph_2d("AverageSatisfaction", ax2[3])
+
+plt.sca(ax2[3])
+plt.xticks(range(10), ['1', '1.34', '1.67', '2', '2.34', '2.67', '3', '3.34', '3.67', '4'])
+plt.tight_layout()
+plt.savefig('visualization_two.png')
+plt.close(4)
+
+plt.show()
